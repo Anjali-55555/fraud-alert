@@ -42,6 +42,7 @@ const MainDashboard = () => {
   const [testCountry, setTestCountry] = useState('US');
   const [testDevice, setTestDevice] = useState('Chrome OS / Windows Desktop');
   const [submittingTx, setSubmittingTx] = useState(false);
+  const [selectedTx, setSelectedTx] = useState(null);
 
   const fileInputRef = useRef(null);
 
@@ -383,8 +384,13 @@ const MainDashboard = () => {
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     {transactions.map((tx) => (
-                      <tr key={tx.transactionId} className="hover:bg-white/5 transition-colors">
-                        <td className="py-2.5 font-mono text-slate-400">{tx.transactionId}</td>
+                      <tr 
+                        key={tx.transactionId} 
+                        onClick={() => setSelectedTx(tx)}
+                        className="hover:bg-white/5 transition-colors cursor-pointer"
+                        title="Click to view detailed receipt & AI analysis"
+                      >
+                        <td className="py-2.5 font-mono text-indigo-400 hover:text-indigo-300 font-semibold">{tx.transactionId}</td>
                         <td className="py-2.5 font-medium">{tx.merchant}</td>
                         <td className="py-2.5 font-bold">${tx.amount.toLocaleString()}</td>
                         <td className="py-2.5 text-slate-400">{tx.location}, {tx.country}</td>
@@ -401,6 +407,76 @@ const MainDashboard = () => {
               </div>
             </div>
           </div>
+          
+          {/* Transaction Detail Receipt Modal */}
+          {selectedTx && (
+            <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-center items-center p-4">
+              <div className="max-w-md w-full glass-card p-6 rounded-2xl border border-white/10 space-y-6 shadow-2xl relative">
+                <button 
+                  onClick={() => setSelectedTx(null)}
+                  className="absolute top-4 right-4 text-slate-400 hover:text-slate-200 text-sm font-bold p-1"
+                >
+                  ✕
+                </button>
+                
+                <div className="flex items-center gap-3">
+                  <div className={`p-2.5 rounded-xl ${
+                    selectedTx.status === 'Approved' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'
+                  }`}>
+                    <ShieldAlert className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-sm text-slate-200">Transaction Details</h3>
+                    <p className="text-[10px] text-indigo-400 font-semibold font-mono">{selectedTx.transactionId}</p>
+                  </div>
+                </div>
+
+                <div className="divide-y divide-white/5 text-xs">
+                  <div className="py-2.5 flex justify-between">
+                    <span className="text-slate-400">Merchant</span>
+                    <span className="font-semibold text-slate-200">{selectedTx.merchant}</span>
+                  </div>
+                  <div className="py-2.5 flex justify-between">
+                    <span className="text-slate-400">Amount</span>
+                    <span className="font-bold text-slate-200">${selectedTx.amount.toLocaleString()}</span>
+                  </div>
+                  <div className="py-2.5 flex justify-between">
+                    <span className="text-slate-400">Location</span>
+                    <span className="text-slate-200">{selectedTx.location}, {selectedTx.country}</span>
+                  </div>
+                  <div className="py-2.5 flex justify-between">
+                    <span className="text-slate-400">Device Signature</span>
+                    <span className="text-slate-200">{selectedTx.device}</span>
+                  </div>
+                  <div className="py-2.5 flex justify-between">
+                    <span className="text-slate-400">Payment Method</span>
+                    <span className="text-slate-200">{selectedTx.paymentMethod}</span>
+                  </div>
+                  <div className="py-2.5 flex justify-between">
+                    <span className="text-slate-400">Risk Score & Classification</span>
+                    <span className={`font-semibold ${
+                      selectedTx.riskLevel === 'High' ? 'text-rose-500' : 'text-emerald-500'
+                    }`}>
+                      {selectedTx.riskScore} ({selectedTx.riskLevel})
+                    </span>
+                  </div>
+                  <div className="py-3.5 space-y-1.5">
+                    <span className="text-slate-400 font-semibold block uppercase text-[9px] tracking-wider">AI Copilot Analysis</span>
+                    <p className="text-slate-300 leading-relaxed text-[11px] bg-slate-950/40 p-3 rounded-xl border border-white/5 font-medium">
+                      {selectedTx.aiExplanation || 'AI analysis is currently evaluating this transaction...'}
+                    </p>
+                  </div>
+                </div>
+
+                <button 
+                  onClick={() => setSelectedTx(null)}
+                  className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition-all cursor-pointer"
+                >
+                  Close Receipt
+                </button>
+              </div>
+            </div>
+          )}
         </main>
       </div>
     );
