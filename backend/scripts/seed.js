@@ -331,6 +331,29 @@ const seed = async () => {
       aiExplanation: 'Routine ride share transaction.'
     });
 
+    txDocs.push({
+      transactionId: `TXN-${Math.floor(3000000 + Math.random() * 9000000)}`,
+      customerId: 'CUST-2000',
+      customerName: 'Kanneboyina Ramadevi',
+      accountNumber: 'ACC-992301',
+      merchant: 'Global Crypto Exchange',
+      amount: 5000.00,
+      currency: 'USD',
+      location: 'Moscow',
+      country: 'RU',
+      dateTime: new Date(Date.now() - 2*60*60*1000),
+      paymentMethod: 'Wire Transfer',
+      ipAddress: '95.104.22.4',
+      device: 'Firefox / Linux',
+      status: 'Pending',
+      riskScore: 92,
+      riskLevel: 'High',
+      riskContributors: { amount: 30, location: 25, velocity: 15, device: 22, merchant: 0, time: 0 },
+      fraudStatus: 'Suspicious',
+      rulesTriggered: ['RULE-01', 'RULE-04', 'RULE-05'],
+      aiExplanation: 'Flagged due to a high-value cryptocurrency purchase ($5,000.00) initiated from an untrusted Linux/Firefox device in Moscow, Russia. This represents a significant location mismatch and velocity anomaly compared to the customer usual $365.00 average spend pattern.'
+    });
+
     // A. Create 450 normal transactions
     for (let i = 0; i < 450; i++) {
       const cust = customerDocs[Math.floor(Math.random() * customerDocs.length)];
