@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  database:
+    image: mongo:latest
+    container_name: fraudalert_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - fraudnet
+
+  backend:
+    build:
+      context: ./backend
+    container_name: fraudalert_api
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGO_URI=mongodb://database:27017/fraudalert_lite
+      - JWT_SECRET=secretkey_fraud_alert_lite
+      - JWT_REFRESH_SECRET=refreshsecret_fraud_alert_lite
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GEMINI_MODEL=gemini-1.5-flash
+      - USE_REDIS=false
+    depends_on:
+      - database
+    networks:
+      - fraudnet
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: fraudalert_ui
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - fraudnet
+
+volumes:
+  mongo_data:
+
+networks:
+  fraudnet:
+    driver: bridge

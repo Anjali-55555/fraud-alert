@@ -1,0 +1,11 @@
+{
+  "name": "fraudalert-lite",
+  "version": "1.0.0",
+  "description": "AI-Powered Financial Fraud Detection Platform",
+  "scripts": {
+    "postinstall": "npm install --prefix backend && npm install --prefix frontend --legacy-peer-deps",
+    "start": "node start.js",
+    "seed": "npm run seed --prefix backend"
+  },
+  "private": true
+}
