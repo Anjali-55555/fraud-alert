@@ -408,10 +408,27 @@ const MainDashboard = () => {
                         <td className="py-2.5 font-bold">${tx.amount.toLocaleString()}</td>
                         <td className="py-2.5 text-slate-400">{tx.location}, {tx.country}</td>
                         <td className="py-2.5 text-slate-400">{new Date(tx.dateTime).toLocaleDateString()}</td>
-                        <td className="py-2.5 text-right">
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
-                            tx.status === 'Approved' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'
-                          }`}>{tx.status}</span>
+                        <td className="py-2.5 text-right font-sans">
+                          {tx.status === 'Approved' && (
+                            <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/10">
+                              Approved
+                            </span>
+                          )}
+                          {tx.status === 'Pending' && (
+                            <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/10">
+                              Pending
+                            </span>
+                          )}
+                          {(tx.status === 'Not Approved' || tx.status === 'Rejected') && (
+                            <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/10">
+                              Not Approved
+                            </span>
+                          )}
+                          {tx.status !== 'Approved' && tx.status !== 'Pending' && tx.status !== 'Not Approved' && tx.status !== 'Rejected' && (
+                            <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/10">
+                              {tx.status}
+                            </span>
+                          )}
                         </td>
                       </tr>
                     ))}

@@ -99,6 +99,10 @@ app.use('/api/simulator', simulatorRoutes);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
-  console.log(`[Server] FraudAlert Lite server running on port: ${PORT}`);
-});
+if (!process.env.VERCEL) {
+  server.listen(PORT, () => {
+    console.log(`[Server] FraudAlert Lite server running on port: ${PORT}`);
+  });
+}
+
+module.exports = app;

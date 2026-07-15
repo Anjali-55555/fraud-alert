@@ -341,7 +341,7 @@ const seed = async () => {
       currency: 'USD',
       location: 'Moscow',
       country: 'RU',
-      dateTime: new Date(Date.now() - 2*60*60*1000),
+      dateTime: new Date(Date.now() - 2*24*60*60*1000),
       paymentMethod: 'Wire Transfer',
       ipAddress: '95.104.22.4',
       device: 'Firefox / Linux',
@@ -352,6 +352,29 @@ const seed = async () => {
       fraudStatus: 'Suspicious',
       rulesTriggered: ['RULE-01', 'RULE-04', 'RULE-05'],
       aiExplanation: 'Flagged due to a high-value cryptocurrency purchase ($5,000.00) initiated from an untrusted Linux/Firefox device in Moscow, Russia. This represents a significant location mismatch and velocity anomaly compared to the customer usual $365.00 average spend pattern.'
+    });
+
+    txDocs.push({
+      transactionId: `TXN-${Math.floor(3000000 + Math.random() * 9000000)}`,
+      customerId: 'CUST-2000',
+      customerName: 'Kanneboyina Ramadevi',
+      accountNumber: 'ACC-992301',
+      merchant: 'Lux Shop Overseas',
+      amount: 12000.00,
+      currency: 'USD',
+      location: 'Beijing',
+      country: 'CN',
+      dateTime: new Date(Date.now() - 1*24*60*60*1000),
+      paymentMethod: 'Debit Card',
+      ipAddress: '122.112.5.6',
+      device: 'Chrome OS / Windows Desktop',
+      status: 'Rejected',
+      riskScore: 99,
+      riskLevel: 'High',
+      riskContributors: { amount: 45, location: 35, velocity: 10, device: 0, merchant: 0, time: 0 },
+      fraudStatus: 'Confirmed_Fraud',
+      rulesTriggered: ['RULE-02', 'RULE-04'],
+      aiExplanation: 'Declined. Transaction was blocked automatically because the purchase amount ($12,000.00) exceeds maximum single transaction limits, and originates from an unverified geographic location (Beijing, CN).'
     });
 
     // A. Create 450 normal transactions
