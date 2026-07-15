@@ -43,6 +43,7 @@ const MainDashboard = () => {
   const [testDevice, setTestDevice] = useState('Chrome OS / Windows Desktop');
   const [submittingTx, setSubmittingTx] = useState(false);
   const [selectedTx, setSelectedTx] = useState(null);
+  const [testTxId, setTestTxId] = useState('');
 
   const fileInputRef = useRef(null);
 
@@ -177,6 +178,7 @@ const MainDashboard = () => {
     setSubmittingTx(true);
     try {
       const res = await axios.post('/api/transactions', {
+        transactionId: testTxId.trim() || undefined,
         customerId: customerProfile.customerId,
         customerName: customerProfile.fullName,
         accountNumber: customerProfile.accountNumber,
@@ -198,6 +200,7 @@ const MainDashboard = () => {
           isApproved ? 'success' : 'error'
         );
         setTestAmount('');
+        setTestTxId('');
         fetchCustomerProfile();
       }
     } catch (err) {
@@ -309,6 +312,16 @@ const MainDashboard = () => {
                   Simulate a card purchase. Execute transactions with high amounts or from foreign countries to watch the Risk Engine rules and AI analyze them live.
                 </p>
                 <form onSubmit={handleCreateTestTx} className="space-y-3 pt-1">
+                  <div className="space-y-1">
+                    <label className="text-[9px] uppercase font-bold text-slate-500">Transaction ID (Optional)</label>
+                    <input
+                      type="text"
+                      value={testTxId}
+                      onChange={(e) => setTestTxId(e.target.value)}
+                      placeholder="E.g. TXN-100200"
+                      className="w-full px-3 py-1.5 text-xs rounded-xl glass-input placeholder-slate-600 focus:outline-none"
+                    />
+                  </div>
                   <div className="space-y-1">
                     <label className="text-[9px] uppercase font-bold text-slate-500">Merchant</label>
                     <input
